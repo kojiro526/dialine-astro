@@ -1,23 +1,146 @@
+---
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'Dialine Diary',
+	description = '公開日記のサイトテンプレート',
+} = Astro.props;
+
+const pathname = Astro.url.pathname;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta name="description" content={description} />
+		<title>{title}</title>
 	</head>
 	<body>
-		<slot />
+		<div class="site-shell">
+			<header class="site-header">
+				<a class="site-title" href="/">Dialine Diary</a>
+				<nav>
+					<a class:list={{ active: pathname === '/' }} href="/">Home</a>
+					<a class:list={{ active: pathname.startsWith('/archive/') }} href="/archive/">
+						Archive
+					</a>
+					<a href="/rss.xml">RSS</a>
+				</nav>
+			</header>
+
+			<slot />
+
+			<footer class="site-footer">
+				<p>Powered by Astro template for Dialine publishing.</p>
+			</footer>
+		</div>
 	</body>
 </html>
 
 <style>
+	:root {
+		--bg-top: #f7f5ef;
+		--bg-bottom: #ece9dd;
+		--surface: #fefcf7;
+		--surface-elevated: #fffdf8;
+		--line-soft: #ddd4c1;
+		--text-strong: #2f2922;
+		--text-muted: #6c6256;
+		--accent: #8e3f1a;
+		--accent-soft: #c97c42;
+		--shadow-soft: 0 8px 30px rgba(48, 35, 24, 0.08);
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
 	html,
 	body {
 		margin: 0;
+		min-height: 100%;
+		color: var(--text-strong);
+		background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+		font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
+	}
+
+	a {
+		color: inherit;
+	}
+
+	.site-shell {
+		min-height: 100vh;
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+	}
+
+	.site-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+		padding: 20px 16px;
+		max-width: 980px;
 		width: 100%;
-		height: 100%;
+		margin: 0 auto;
+	}
+
+	.site-title {
+		text-decoration: none;
+		font-weight: 800;
+		letter-spacing: 0.03em;
+	}
+
+	nav {
+		display: flex;
+		gap: 10px;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	nav a {
+		text-decoration: none;
+		color: var(--text-muted);
+		padding: 6px 10px;
+		border-radius: 999px;
+		border: 1px solid transparent;
+		transition: all 0.2s ease;
+	}
+
+	nav a:hover {
+		color: var(--text-strong);
+		border-color: var(--line-soft);
+		background: color-mix(in srgb, var(--surface) 75%, white 25%);
+	}
+
+	nav a.active {
+		color: var(--accent);
+		border-color: color-mix(in srgb, var(--accent) 30%, var(--line-soft) 70%);
+		background: color-mix(in srgb, var(--surface) 80%, white 20%);
+	}
+
+	.site-footer {
+		max-width: 980px;
+		width: 100%;
+		margin: 0 auto;
+		padding: 18px 16px 24px;
+		color: var(--text-muted);
+		font-size: 0.85rem;
+	}
+
+	@media (max-width: 640px) {
+		.site-header {
+			align-items: flex-start;
+			flex-direction: column;
+			gap: 12px;
+		}
 	}
 </style>

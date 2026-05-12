@@ -1,0 +1,127 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { findDiaryDayByDate, listDiaryDays } from '../../../../lib/published-content';
+
+export function getStaticPaths() {
+  return listDiaryDays().map((day) => ({
+    params: {
+      year: day.year,
+      month: day.month,
+      day: day.day,
+    },
+  }));
+}
+
+const year = Astro.params.year ?? '';
+const month = Astro.params.month ?? '';
+const day = Astro.params.day ?? '';
+const date = `${year}-${month}-${day}`;
+const diaryDay = findDiaryDayByDate(date);
+
+if (!diaryDay) {
+  throw new Error(`Diary day not found: ${date}`);
+}
+
+const DayContent = diaryDay.Content;
+---
+
+<Layout title={`${diaryDay.title} | Dialine`} description={diaryDay.excerpt}>
+  <main class="container">
+    <article class="day-card">
+      <header>
+        <p class="meta">{diaryDay.date}</p>
+        <h1>{diaryDay.title}</h1>
+      </header>
+
+      {
+        diaryDay.entries.length > 0 ? (
+          <ul class="entry-links">
+            {diaryDay.entries.map((entry) => (
+              <li>
+                <span>{entry.time}</span>
+                <a href={entry.url}>{entry.id}</a>
+              </li>
+            ))}
+          </ul>
+        ) : null
+      }
+
+      {
+        typeof DayContent === 'function' ? (
+          <div class="content">
+            <DayContent />
+          </div>
+        ) : (
+          <p class="empty">この日付の本文を表示できません。</p>
+        )
+      }
+    </article>
+  </main>
+</Layout>
+
+<style>
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 32px 16px 56px;
+  }
+
+  .day-card {
+    border: 1px solid var(--line-soft);
+    border-radius: 16px;
+    background: var(--surface-elevated);
+    padding: 20px;
+  }
+
+  .meta {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+  }
+
+  h1 {
+    margin: 10px 0 0;
+    font-size: 1.65rem;
+    line-height: 1.35;
+  }
+
+  .entry-links {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  .entry-links li {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+
+  .entry-links span {
+    width: 48px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .entry-links a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .entry-links a:hover {
+    text-decoration: underline;
+  }
+
+  .content {
+    margin-top: 20px;
+  }
+
+  .empty {
+    margin-top: 20px;
+    color: var(--text-muted);
+  }
+</style>

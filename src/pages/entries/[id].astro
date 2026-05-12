@@ -1,0 +1,97 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { findEntryById, listEntries } from '../../lib/published-content';
+
+export function getStaticPaths() {
+  return listEntries().map((entry) => ({
+    params: { id: entry.id },
+  }));
+}
+
+const id = Astro.params.id ?? '';
+const entry = findEntryById(id);
+
+if (!entry) {
+  throw new Error(`Entry not found: ${id}`);
+}
+
+const EntryContent = entry.Content;
+---
+
+<Layout title={`${entry.title} | Dialine`} description={entry.excerpt}>
+  <main class="container">
+    <article class="entry-card">
+      <header>
+        <p class="meta">{entry.date} {entry.time}</p>
+        <h1>{entry.title}</h1>
+        {
+          entry.dayUrl ? (
+            <p class="day-link">
+              <a href={entry.dayUrl}>この日の一覧へ</a>
+            </p>
+          ) : null
+        }
+      </header>
+
+      {
+        typeof EntryContent === 'function' ? (
+          <div class="content">
+            <EntryContent />
+          </div>
+        ) : (
+          <p class="empty">投稿本文を表示できません。</p>
+        )
+      }
+    </article>
+  </main>
+</Layout>
+
+<style>
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 32px 16px 56px;
+  }
+
+  .entry-card {
+    border: 1px solid var(--line-soft);
+    border-radius: 16px;
+    background: var(--surface-elevated);
+    padding: 20px;
+  }
+
+  .meta {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+  }
+
+  h1 {
+    margin: 10px 0 0;
+    font-size: 1.65rem;
+    line-height: 1.35;
+  }
+
+  .day-link {
+    margin: 12px 0 0;
+  }
+
+  .day-link a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .day-link a:hover {
+    text-decoration: underline;
+  }
+
+  .content {
+    margin-top: 20px;
+  }
+
+  .empty {
+    margin-top: 20px;
+    color: var(--text-muted);
+  }
+</style>

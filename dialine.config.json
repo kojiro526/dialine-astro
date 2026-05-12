@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "app": "dialine",
+  "templateVersion": "1.0.0",
+  "ssg": "astro",
+  "publishModel": "daily-and-entry",
+  "visibilityModes": ["private", "public"],
+  "branch": "main",
+  "daily": {
+    "contentDir": "content/diary",
+    "filePattern": "YYYY/MM/YYYY-MM-DD.md",
+    "urlPattern": "/diary/YYYY/MM/DD/"
+  },
+  "entry": {
+    "contentDir": "content/entries",
+    "filePattern": "{{entryId}}.md",
+    "urlPattern": "/entries/{{entryId}}/"
+  },
+  "media": {
+    "dir": "public/media",
+    "urlPattern": "/media/YYYY/MM/{{fileName}}"
+  },
+  "frontmatter": {
+    "format": "yaml"
+  },
+  "commit": {
+    "messageDaily": "Publish diary: {{date}}",
+    "messageEntry": "Publish entry: {{entryId}}",
+    "messageBatch": "Publish diary updates"
+  }
+}

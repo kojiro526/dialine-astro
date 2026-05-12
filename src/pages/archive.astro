@@ -1,0 +1,117 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { listEntries } from '../lib/published-content';
+
+const entries = listEntries();
+const groups = new Map<string, typeof entries>();
+
+for (const entry of entries) {
+  const key = entry.date.slice(0, 7);
+  const current = groups.get(key) ?? [];
+  current.push(entry);
+  groups.set(key, current);
+}
+---
+
+<Layout title="Archive | Dialine" description="公開済み投稿のアーカイブ">
+  <main class="container">
+    <header class="page-header">
+      <h1>Archive</h1>
+      <p>公開済みの投稿を月別に一覧表示します。</p>
+    </header>
+
+    {
+      entries.length === 0 ? (
+        <p class="empty">まだ公開済みの投稿がありません。</p>
+      ) : (
+        <div class="archive-groups">
+          {Array.from(groups.entries()).map(([month, monthEntries]) => (
+            <section class="month-group">
+              <h2>{month}</h2>
+              <ul>
+                {monthEntries.map((entry) => (
+                  <li>
+                    <a href={entry.permalink}>{entry.title}</a>
+                    <span>{entry.date} {entry.time}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      )
+    }
+  </main>
+</Layout>
+
+<style>
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 32px 16px 56px;
+  }
+
+  .page-header h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+
+  .page-header p {
+    margin: 10px 0 0;
+    color: var(--text-muted);
+  }
+
+  .archive-groups {
+    display: grid;
+    gap: 24px;
+    margin-top: 24px;
+  }
+
+  .month-group {
+    border: 1px solid var(--line-soft);
+    border-radius: 14px;
+    padding: 16px;
+    background: var(--surface-elevated);
+  }
+
+  .month-group h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+
+  .month-group ul {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .month-group li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: baseline;
+  }
+
+  .month-group a {
+    color: var(--text-strong);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .month-group a:hover {
+    text-decoration: underline;
+  }
+
+  .month-group span {
+    font-size: 0.86rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .empty {
+    margin-top: 24px;
+    color: var(--text-muted);
+  }
+</style>
