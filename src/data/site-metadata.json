@@ -1,7 +1,7 @@
 {
   "site": {
-    "title": "Dialine Diary",
-    "description": "公開日記のサイトテンプレート",
+    "title": "Dragon's Eye Blog",
+    "description": "kojiro526のDialine",
     "language": "ja",
     "footerText": "Powered by Astro template for Dialine publishing."
   },
@@ -11,10 +11,10 @@
     "rssLabel": "RSS"
   },
   "home": {
-    "pageTitle": "Dialine Diary",
+    "pageTitle": "Dragon's Eye",
     "pageDescription": "公開済みの断片を日付別に表示する公式テンプレート",
     "headline": "Dialine Diary",
-    "intro": "Dialine から公開された日記を表示する Astro テンプレートです。\n日別ページと投稿別ページを静的生成します。",
+    "intro": "日々のつぶやき",
     "latestDaysHeading": "最近の日別ページ",
     "latestEntriesHeading": "最近の投稿",
     "emptyDaysText": "まだ日別ページがありません。",
@@ -33,7 +33,7 @@
     "contentUnavailableText": "この日付の本文を表示できません。"
   },
   "rss": {
-    "title": "Dialine Diary",
+    "title": "Dragon's Eye",
     "description": "Dialine で公開された日記エントリーの RSS"
   }
 }
