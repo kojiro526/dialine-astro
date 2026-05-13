@@ -2,6 +2,7 @@
 import Layout from '../../../../layouts/Layout.astro';
 import { findDiaryDayByDate, listDiaryDays } from '../../../../lib/published-content';
 import { withBasePath } from '../../../../lib/site-path';
+import { siteMetadata } from '../../../../lib/site-metadata';
 
 export function getStaticPaths() {
   return listDiaryDays().map((day) => ({
@@ -26,7 +27,10 @@ if (!diaryDay) {
 const DayContent = diaryDay.Content;
 ---
 
-<Layout title={`${diaryDay.title} | Dialine`} description={diaryDay.excerpt}>
+<Layout
+  title={`${diaryDay.title} | ${siteMetadata.site.title}`}
+  description={diaryDay.excerpt || siteMetadata.site.description}
+>
   <main class="container">
     <article class="day-card">
       <header>
@@ -53,7 +57,7 @@ const DayContent = diaryDay.Content;
             <DayContent />
           </div>
         ) : (
-          <p class="empty">この日付の本文を表示できません。</p>
+          <p class="empty">{siteMetadata.day.contentUnavailableText}</p>
         )
       }
     </article>

@@ -2,6 +2,7 @@ import type { APIContext } from 'astro';
 
 import { listEntries } from '../lib/published-content';
 import { withBasePath } from '../lib/site-path';
+import { siteMetadata } from '../lib/site-metadata';
 
 function escapeXml(value: string): string {
   return value
@@ -43,7 +44,7 @@ export function GET(context: APIContext): Response {
     })
     .join('\n');
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n<channel>\n<title>Dialine Diary</title>\n<link>${site.toString()}</link>\n<description>Dialine で公開された日記エントリーの RSS</description>\n<lastBuildDate>${now}</lastBuildDate>\n<atom:link href="${feedUrl}" rel="self" type="application/rss+xml" xmlns:atom="http://www.w3.org/2005/Atom" />\n${itemsXml}\n</channel>\n</rss>`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0">\n<channel>\n<title>${escapeXml(siteMetadata.rss.title)}</title>\n<link>${site.toString()}</link>\n<description>${escapeXml(siteMetadata.rss.description)}</description>\n<lastBuildDate>${now}</lastBuildDate>\n<atom:link href="${feedUrl}" rel="self" type="application/rss+xml" xmlns:atom="http://www.w3.org/2005/Atom" />\n${itemsXml}\n</channel>\n</rss>`;
 
   return new Response(xml, {
     headers: {

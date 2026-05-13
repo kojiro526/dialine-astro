@@ -35,12 +35,17 @@ npm run build
 
 - `dialine.config.json`
 	- Flutter 側の公開処理が参照する設定ファイル
+	- `siteMetaPath` にサイト表示文言 JSON の保存先を宣言する
 - `content/diary/`
 	- 日別 Markdown の格納先
 - `content/entries/`
 	- 投稿別 Markdown の格納先
 - `public/media/`
 	- 添付メディアの格納先
+- `src/data/site-metadata.json`
+	- サイトタイトル、説明文、RSS 文言などの表示設定
+- `src/lib/site-metadata.ts`
+	- `dialine.config.json` の `siteMetaPath` を読み、表示設定 JSON をロードする
 - `.github/workflows/deploy.yml`
 	- GitHub Pages 用デプロイ workflow
 
@@ -51,6 +56,12 @@ npm run build
 - Diary day: `/diary/YYYY/MM/DD/`
 - Entry: `/entries/{entryId}/`
 - RSS: `/rss.xml`
+
+## サイト文言の設定
+
+- サイトタイトル、説明文、フッター、ホーム説明、RSS 文言は `src/data/site-metadata.json` から読み込みます
+- 読み込む JSON のパスは `dialine.config.json` の `siteMetaPath` で宣言します
+- Dialine アプリの設定画面からは、この `siteMetaPath` で指定された JSON を GitHub Contents API 経由で更新する想定です
 
 ## Markdown frontmatter 例
 

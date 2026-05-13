@@ -2,27 +2,33 @@
 import Layout from '../layouts/Layout.astro';
 import { listDiaryDays, listEntries } from '../lib/published-content';
 import { withBasePath } from '../lib/site-path';
+import { siteMetadata } from '../lib/site-metadata';
 
 const latestDays = listDiaryDays().slice(0, 14);
 const latestEntries = listEntries().slice(0, 20);
+const homeIntroLines = siteMetadata.home.intro.split('\n');
 ---
 
-<Layout title="Dialine Diary" description="公開済みの断片を日付別に表示する公式テンプレート">
+<Layout title={siteMetadata.home.pageTitle} description={siteMetadata.home.pageDescription}>
 	<main class="container">
 		<section class="hero">
-			<h1>Dialine Diary</h1>
+			<h1>{siteMetadata.home.headline}</h1>
 			<p>
-				Dialine から公開された日記を表示する Astro テンプレートです。<br />
-				日別ページと投稿別ページを静的生成します。
+				{homeIntroLines.map((line, index) => (
+					<>
+						{line}
+						{index < homeIntroLines.length - 1 ? <br /> : null}
+					</>
+				))}
 			</p>
 		</section>
 
 		<section class="panel-grid">
 			<article class="panel">
-				<h2>最近の日別ページ</h2>
+				<h2>{siteMetadata.home.latestDaysHeading}</h2>
 				{
 					latestDays.length === 0 ? (
-						<p class="empty">まだ日別ページがありません。</p>
+						<p class="empty">{siteMetadata.home.emptyDaysText}</p>
 					) : (
 						<ul>
 							{latestDays.map((day) => (
@@ -37,10 +43,10 @@ const latestEntries = listEntries().slice(0, 20);
 			</article>
 
 			<article class="panel">
-				<h2>最近の投稿</h2>
+				<h2>{siteMetadata.home.latestEntriesHeading}</h2>
 				{
 					latestEntries.length === 0 ? (
-						<p class="empty">まだ投稿がありません。</p>
+						<p class="empty">{siteMetadata.home.emptyEntriesText}</p>
 					) : (
 						<ul>
 							{latestEntries.map((entry) => (

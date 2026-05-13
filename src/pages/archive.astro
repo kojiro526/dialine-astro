@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { listEntries } from '../lib/published-content';
 import { withBasePath } from '../lib/site-path';
+import { siteMetadata } from '../lib/site-metadata';
 
 const entries = listEntries();
 const groups = new Map<string, typeof entries>();
@@ -14,16 +15,19 @@ for (const entry of entries) {
 }
 ---
 
-<Layout title="Archive | Dialine" description="公開済み投稿のアーカイブ">
+<Layout
+  title={`${siteMetadata.archive.pageTitle} | ${siteMetadata.site.title}`}
+  description={siteMetadata.archive.pageDescription}
+>
   <main class="container">
     <header class="page-header">
-      <h1>Archive</h1>
-      <p>公開済みの投稿を月別に一覧表示します。</p>
+      <h1>{siteMetadata.archive.pageTitle}</h1>
+      <p>{siteMetadata.archive.pageDescription}</p>
     </header>
 
     {
       entries.length === 0 ? (
-        <p class="empty">まだ公開済みの投稿がありません。</p>
+        <p class="empty">{siteMetadata.archive.emptyText}</p>
       ) : (
         <div class="archive-groups">
           {Array.from(groups.entries()).map(([month, monthEntries]) => (

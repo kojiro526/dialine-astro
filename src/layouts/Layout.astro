@@ -1,5 +1,6 @@
 ---
 import { toLogicalPath, withBasePath } from '../lib/site-path';
+import { siteMetadata } from '../lib/site-metadata';
 
 interface Props {
 	title?: string;
@@ -7,15 +8,15 @@ interface Props {
 }
 
 const {
-	title = 'Dialine Diary',
-	description = '公開日記のサイトテンプレート',
+	title = siteMetadata.site.title,
+	description = siteMetadata.site.description,
 } = Astro.props;
 
 const pathname = toLogicalPath(Astro.url.pathname) ?? '/';
 ---
 
 <!doctype html>
-<html lang="ja">
+<html lang={siteMetadata.site.language}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -28,25 +29,25 @@ const pathname = toLogicalPath(Astro.url.pathname) ?? '/';
 	<body>
 		<div class="site-shell">
 			<header class="site-header">
-				<a class="site-title" href={withBasePath('/')}>Dialine Diary</a>
+				<a class="site-title" href={withBasePath('/')}>{siteMetadata.site.title}</a>
 				<nav>
 					<a class:list={{ active: pathname === '/' }} href={withBasePath('/')}>
-						Home
+						{siteMetadata.navigation.homeLabel}
 					</a>
 					<a
 						class:list={{ active: pathname.startsWith('/archive/') }}
 						href={withBasePath('/archive/')}
 					>
-						Archive
+						{siteMetadata.navigation.archiveLabel}
 					</a>
-					<a href={withBasePath('/rss.xml')}>RSS</a>
+					<a href={withBasePath('/rss.xml')}>{siteMetadata.navigation.rssLabel}</a>
 				</nav>
 			</header>
 
 			<slot />
 
 			<footer class="site-footer">
-				<p>Powered by Astro template for Dialine publishing.</p>
+				<p>{siteMetadata.site.footerText}</p>
 			</footer>
 		</div>
 	</body>

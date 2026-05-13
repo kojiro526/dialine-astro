@@ -1,0 +1,39 @@
+{
+  "site": {
+    "title": "Dialine Diary",
+    "description": "公開日記のサイトテンプレート",
+    "language": "ja",
+    "footerText": "Powered by Astro template for Dialine publishing."
+  },
+  "navigation": {
+    "homeLabel": "Home",
+    "archiveLabel": "Archive",
+    "rssLabel": "RSS"
+  },
+  "home": {
+    "pageTitle": "Dialine Diary",
+    "pageDescription": "公開済みの断片を日付別に表示する公式テンプレート",
+    "headline": "Dialine Diary",
+    "intro": "Dialine から公開された日記を表示する Astro テンプレートです。\n日別ページと投稿別ページを静的生成します。",
+    "latestDaysHeading": "最近の日別ページ",
+    "latestEntriesHeading": "最近の投稿",
+    "emptyDaysText": "まだ日別ページがありません。",
+    "emptyEntriesText": "まだ投稿がありません。"
+  },
+  "archive": {
+    "pageTitle": "Archive",
+    "pageDescription": "公開済みの投稿を月別に一覧表示します。",
+    "emptyText": "まだ公開済みの投稿がありません。"
+  },
+  "entry": {
+    "backToDayLabel": "この日の一覧へ",
+    "contentUnavailableText": "投稿本文を表示できません。"
+  },
+  "day": {
+    "contentUnavailableText": "この日付の本文を表示できません。"
+  },
+  "rss": {
+    "title": "Dialine Diary",
+    "description": "Dialine で公開された日記エントリーの RSS"
+  }
+}

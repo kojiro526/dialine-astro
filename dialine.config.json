@@ -6,6 +6,7 @@
   "publishModel": "daily-and-entry",
   "visibilityModes": ["private", "public"],
   "branch": "main",
+  "siteMetaPath": "src/data/site-metadata.json",
   "daily": {
     "contentDir": "content/diary",
     "filePattern": "YYYY/MM/YYYY-MM-DD.md",
