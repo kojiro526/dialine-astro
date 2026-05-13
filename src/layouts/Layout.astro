@@ -1,6 +1,6 @@
 ---
 import { toLogicalPath, withBasePath } from '../lib/site-path';
-import { siteMetadata } from '../lib/site-metadata';
+import { loadSiteMetadata } from '../lib/site-metadata';
 
 interface Props {
 	title?: string;
@@ -12,6 +12,7 @@ const {
 	description = siteMetadata.site.description,
 } = Astro.props;
 
+const siteMetadata = loadSiteMetadata();
 const pathname = toLogicalPath(Astro.url.pathname) ?? '/';
 ---
 

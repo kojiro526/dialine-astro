@@ -2,7 +2,7 @@ import type { APIContext } from 'astro';
 
 import { listEntries } from '../lib/published-content';
 import { withBasePath } from '../lib/site-path';
-import { siteMetadata } from '../lib/site-metadata';
+import { loadSiteMetadata } from '../lib/site-metadata';
 
 function escapeXml(value: string): string {
   return value
@@ -27,6 +27,7 @@ function asUtcString(value: string | undefined, fallback: string): string {
 }
 
 export function GET(context: APIContext): Response {
+  const siteMetadata = loadSiteMetadata();
   const site = context.site ?? new URL('https://example.com');
   const feedUrl = new URL(withBasePath('/rss.xml'), site).toString();
   const now = new Date().toUTCString();

@@ -2,7 +2,7 @@
 import Layout from '../../../../layouts/Layout.astro';
 import { findDiaryDayByDate, listDiaryDays } from '../../../../lib/published-content';
 import { withBasePath } from '../../../../lib/site-path';
-import { siteMetadata } from '../../../../lib/site-metadata';
+import { loadSiteMetadata } from '../../../../lib/site-metadata';
 
 export function getStaticPaths() {
   return listDiaryDays().map((day) => ({
@@ -19,6 +19,7 @@ const month = Astro.params.month ?? '';
 const day = Astro.params.day ?? '';
 const date = `${year}-${month}-${day}`;
 const diaryDay = findDiaryDayByDate(date);
+const siteMetadata = loadSiteMetadata();
 
 if (!diaryDay) {
   throw new Error(`Diary day not found: ${date}`);

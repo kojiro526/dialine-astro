@@ -2,9 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import { listEntries } from '../lib/published-content';
 import { withBasePath } from '../lib/site-path';
-import { siteMetadata } from '../lib/site-metadata';
+import { loadSiteMetadata } from '../lib/site-metadata';
 
 const entries = listEntries();
+const siteMetadata = loadSiteMetadata();
 const groups = new Map<string, typeof entries>();
 
 for (const entry of entries) {

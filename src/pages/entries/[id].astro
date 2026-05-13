@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { findEntryById, listEntries } from '../../lib/published-content';
 import { withBasePath } from '../../lib/site-path';
-import { siteMetadata } from '../../lib/site-metadata';
+import { loadSiteMetadata } from '../../lib/site-metadata';
 
 export function getStaticPaths() {
   return listEntries().map((entry) => ({
@@ -12,6 +12,7 @@ export function getStaticPaths() {
 
 const id = Astro.params.id ?? '';
 const entry = findEntryById(id);
+const siteMetadata = loadSiteMetadata();
 
 if (!entry) {
   throw new Error(`Entry not found: ${id}`);

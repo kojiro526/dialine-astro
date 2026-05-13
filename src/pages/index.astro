@@ -2,10 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import { listDiaryDays, listEntries } from '../lib/published-content';
 import { withBasePath } from '../lib/site-path';
-import { siteMetadata } from '../lib/site-metadata';
+import { loadSiteMetadata } from '../lib/site-metadata';
 
 const latestDays = listDiaryDays().slice(0, 14);
 const latestEntries = listEntries().slice(0, 20);
+const siteMetadata = loadSiteMetadata();
 const homeIntroLines = siteMetadata.home.intro.split('\n');
 ---
 

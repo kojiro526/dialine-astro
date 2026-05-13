@@ -1,6 +1,5 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 interface DialineConfigLike {
   siteMetaPath?: string;
@@ -46,7 +45,7 @@ export interface SiteMetadata {
   };
 }
 
-const projectRoot = resolve(fileURLToPath(new URL('../../', import.meta.url)));
+const projectRoot = process.cwd();
 const dialineConfigPath = resolve(projectRoot, 'dialine.config.json');
 const defaultSiteMetaPath = 'src/data/site-metadata.json';
 
@@ -89,8 +88,6 @@ const defaultSiteMetadata: SiteMetadata = {
     description: 'Dialine で公開された日記エントリーの RSS',
   },
 };
-
-export const siteMetadata = loadSiteMetadata();
 
 export function loadSiteMetadata(): SiteMetadata {
   const dialineConfig = readJsonFile<DialineConfigLike>(dialineConfigPath);
