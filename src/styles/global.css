@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+  --color-paper: #f5efe5;
+  --color-paper-soft: #fbf7ef;
+  --color-surface: #fffdf8;
+  --color-surface-muted: #f1e9da;
+  --color-line: #d8cec0;
+  --color-ink: #1f2a27;
+  --color-muted: #64706c;
+  --color-primary: #0d6f66;
+  --color-primary-soft: #dceeea;
+  --color-primary-muted: #6b9a93;
+  --color-amber-soft: #a96c2c;
+  --shadow-paper: 0 18px 48px rgb(31 42 39 / 0.08);
+}
+
+@layer base {
+  html {
+    color: var(--color-ink);
+    background: var(--color-paper);
+    font-family: var(--font-sans);
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    background:
+      linear-gradient(180deg, rgb(255 253 248 / 0.72), rgb(245 239 229 / 0) 280px),
+      var(--color-paper);
+  }
+
+  a {
+    color: inherit;
+  }
+}
+
+@layer components {
+  .content-shell {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .surface-panel {
+    @apply rounded-lg border border-line/80 bg-surface/90 shadow-paper;
+  }
+
+  .section-label {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-primary-muted;
+  }
+
+  .quiet-link {
+    @apply text-ink no-underline transition-colors hover:text-primary hover:underline;
+  }
+
+  .metadata-text {
+    @apply text-sm text-muted;
+  }
+
+  .markdown-body {
+    @apply text-[1rem] leading-8 text-ink;
+  }
+
+  .markdown-body > * + * {
+    margin-top: 1rem;
+  }
+
+  .markdown-body h1,
+  .markdown-body h2,
+  .markdown-body h3 {
+    @apply font-semibold tracking-normal text-ink;
+  }
+
+  .markdown-body h1 {
+    @apply text-2xl;
+  }
+
+  .markdown-body h2 {
+    @apply text-xl;
+  }
+
+  .markdown-body h3 {
+    @apply text-lg;
+  }
+
+  .markdown-body a {
+    @apply font-medium text-primary underline decoration-primary/25 underline-offset-4 transition-colors hover:text-ink;
+  }
+
+  .markdown-body ul,
+  .markdown-body ol {
+    @apply pl-6;
+  }
+
+  .markdown-body ul {
+    @apply list-disc;
+  }
+
+  .markdown-body ol {
+    @apply list-decimal;
+  }
+
+  .markdown-body blockquote {
+    @apply border-l-2 border-primary/40 pl-4 text-muted;
+  }
+
+  .markdown-body code {
+    @apply rounded bg-primary-soft px-1.5 py-0.5 text-[0.9em] text-primary;
+  }
+
+  .markdown-body pre {
+    @apply overflow-x-auto rounded-lg border border-line bg-ink p-4 text-surface;
+  }
+
+  .markdown-body pre code {
+    @apply bg-transparent p-0 text-inherit;
+  }
+}

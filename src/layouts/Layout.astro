@@ -1,4 +1,5 @@
 ---
+import '../styles/global.css';
 import { toLogicalPath, withBasePath } from '../lib/site-path';
 import { loadSiteMetadata } from '../lib/site-metadata';
 
@@ -7,13 +8,31 @@ interface Props {
 	description?: string;
 }
 
+const siteMetadata = loadSiteMetadata();
 const {
 	title = siteMetadata.site.title,
 	description = siteMetadata.site.description,
 } = Astro.props;
 
-const siteMetadata = loadSiteMetadata();
 const pathname = toLogicalPath(Astro.url.pathname) ?? '/';
+
+const navItems = [
+	{
+		label: siteMetadata.navigation.homeLabel,
+		href: withBasePath('/'),
+		active: pathname === '/',
+	},
+	{
+		label: siteMetadata.navigation.archiveLabel,
+		href: withBasePath('/archive/'),
+		active: pathname.startsWith('/archive/'),
+	},
+	{
+		label: siteMetadata.navigation.rssLabel,
+		href: withBasePath('/rss.xml'),
+		active: false,
+	},
+];
 ---
 
 <!doctype html>
@@ -27,129 +46,38 @@ const pathname = toLogicalPath(Astro.url.pathname) ?? '/';
 		<meta name="description" content={description} />
 		<title>{title}</title>
 	</head>
-	<body>
-		<div class="site-shell">
-			<header class="site-header">
-				<a class="site-title" href={withBasePath('/')}>{siteMetadata.site.title}</a>
-				<nav>
-					<a class:list={{ active: pathname === '/' }} href={withBasePath('/')}>
-						{siteMetadata.navigation.homeLabel}
+	<body class="min-h-screen text-ink antialiased">
+		<div class="grid min-h-screen grid-rows-[auto_1fr_auto]">
+			<header class="border-b border-line/70 bg-paper-soft/82 backdrop-blur">
+				<div class="content-shell flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-5">
+					<a class="inline-flex items-baseline gap-2 text-lg font-semibold tracking-normal text-ink no-underline" href={withBasePath('/')}>
+						<span>{siteMetadata.site.title}</span>
+						<span class="hidden h-1.5 w-1.5 rounded-full bg-primary sm:inline-block"></span>
 					</a>
-					<a
-						class:list={{ active: pathname.startsWith('/archive/') }}
-						href={withBasePath('/archive/')}
-					>
-						{siteMetadata.navigation.archiveLabel}
-					</a>
-					<a href={withBasePath('/rss.xml')}>{siteMetadata.navigation.rssLabel}</a>
-				</nav>
+					<nav class="flex flex-wrap items-center gap-2" aria-label="Primary navigation">
+						{navItems.map((item) => (
+							<a
+								class:list={[
+									'rounded-md border px-3 py-1.5 text-sm font-medium no-underline transition-colors',
+									item.active
+										? 'border-primary/25 bg-primary-soft text-primary'
+										: 'border-transparent text-muted hover:border-line hover:bg-surface hover:text-ink',
+								]}
+								href={item.href}
+								aria-current={item.active ? 'page' : undefined}
+							>
+								{item.label}
+							</a>
+						))}
+					</nav>
+				</div>
 			</header>
 
 			<slot />
 
-			<footer class="site-footer">
-				<p>{siteMetadata.site.footerText}</p>
+			<footer class="border-t border-line/60">
+				<p class="content-shell py-6 text-sm text-muted">{siteMetadata.site.footerText}</p>
 			</footer>
 		</div>
 	</body>
 </html>
-
-<style>
-	:root {
-		--bg-top: #f7f5ef;
-		--bg-bottom: #ece9dd;
-		--surface: #fefcf7;
-		--surface-elevated: #fffdf8;
-		--line-soft: #ddd4c1;
-		--text-strong: #2f2922;
-		--text-muted: #6c6256;
-		--accent: #8e3f1a;
-		--accent-soft: #c97c42;
-		--shadow-soft: 0 8px 30px rgba(48, 35, 24, 0.08);
-	}
-
-	* {
-		box-sizing: border-box;
-	}
-
-	html,
-	body {
-		margin: 0;
-		min-height: 100%;
-		color: var(--text-strong);
-		background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
-		font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
-	}
-
-	a {
-		color: inherit;
-	}
-
-	.site-shell {
-		min-height: 100vh;
-		display: grid;
-		grid-template-rows: auto 1fr auto;
-	}
-
-	.site-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		gap: 16px;
-		padding: 20px 16px;
-		max-width: 980px;
-		width: 100%;
-		margin: 0 auto;
-	}
-
-	.site-title {
-		text-decoration: none;
-		font-weight: 800;
-		letter-spacing: 0.03em;
-	}
-
-	nav {
-		display: flex;
-		gap: 10px;
-		align-items: center;
-		flex-wrap: wrap;
-	}
-
-	nav a {
-		text-decoration: none;
-		color: var(--text-muted);
-		padding: 6px 10px;
-		border-radius: 999px;
-		border: 1px solid transparent;
-		transition: all 0.2s ease;
-	}
-
-	nav a:hover {
-		color: var(--text-strong);
-		border-color: var(--line-soft);
-		background: color-mix(in srgb, var(--surface) 75%, white 25%);
-	}
-
-	nav a.active {
-		color: var(--accent);
-		border-color: color-mix(in srgb, var(--accent) 30%, var(--line-soft) 70%);
-		background: color-mix(in srgb, var(--surface) 80%, white 20%);
-	}
-
-	.site-footer {
-		max-width: 980px;
-		width: 100%;
-		margin: 0 auto;
-		padding: 18px 16px 24px;
-		color: var(--text-muted);
-		font-size: 0.85rem;
-	}
-
-	@media (max-width: 640px) {
-		.site-header {
-			align-items: flex-start;
-			flex-direction: column;
-			gap: 12px;
-		}
-	}
-</style>

@@ -46,8 +46,16 @@ npm run build
 	- サイトタイトル、説明文、RSS 文言などの表示設定
 - `src/lib/site-metadata.ts`
 	- `dialine.config.json` の `siteMetaPath` を読み、表示設定 JSON をロードする
+- `src/styles/global.css`
+	- Tailwind CSS の design token と Markdown 本文の基本スタイル
 - `.github/workflows/deploy.yml`
 	- GitHub Pages 用デプロイ workflow
+
+## デザイン調整
+
+- このテンプレートは Tailwind CSS を使ってレイアウトと配色を定義します
+- アプリ本体に近い落ち着いた teal / warm paper 系のトーンを `src/styles/global.css` に集約しています
+- ページ固有の構造は各 `.astro` ファイルの Tailwind class で調整します
 
 ## URL 構成
 

@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
 
 const site = resolveSiteUrl({
 	explicitSiteUrl: process.env.DIALINE_SITE_URL,
@@ -16,6 +17,9 @@ export default defineConfig({
 	site,
 	...(base === undefined ? {} : { base }),
 	trailingSlash: 'always',
+	vite: {
+		plugins: [tailwindcss()],
+	},
 	markdown: {
 		rehypePlugins: [prefixRootRelativeLinks(base)],
 	},
