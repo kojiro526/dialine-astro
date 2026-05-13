@@ -100,8 +100,32 @@ entries:
 - Pages の公開ソースを「GitHub Actions」に設定
 - `main` への push で `dist/` を deploy
 
+### base path の扱い
+
+- GitHub Pages の project site (`https://<user>.github.io/<repo>/`) は base path が必要です
+- このテンプレートは `astro.config.mjs` で `site` から `base` を自動推定します
+- GitHub Actions 上では `DIALINE_SITE_URL` 未設定でも `GITHUB_REPOSITORY` から既定の Pages URL を推定します
+- 独自ドメインや `username.github.io` リポジトリでは `base` は通常不要です
+
+設定方法:
+
+1. 既定の GitHub Pages URL を使う場合
+	- 追加設定なしで build/deploy 可能です
+2. 独自ドメインや別URLを使う場合
+	- `DIALINE_SITE_URL` に公開URLを設定します
+3. URL path と build base を明示的にずらしたい場合
+	- `DIALINE_BASE_PATH` を追加で設定します
+
+例:
+
+```sh
+DIALINE_SITE_URL=https://kojiro526.github.io/dialine-astro/
+```
+
+frontmatter / entries 配列の `permalink`, `dayUrl`, `url` は base を含まない論理パスとして扱われ、テンプレート側で現在の `base` を付与します。
+
 ## 初期公開時の推奨確認
 
-1. `astro.config.mjs` の `site` を公開予定 URL に更新
+1. 独自ドメインや明示URLを使う場合は `DIALINE_SITE_URL` または `astro.config.mjs` の `site` を公開予定 URL に合わせる
 2. `dialine.config.json` の `branch` が公開ブランチと一致しているか確認
 3. `content/diary` と `content/entries` に Markdown がある状態で `npm run build` を実行

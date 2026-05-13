@@ -1,6 +1,7 @@
 ---
 import Layout from '../../../../layouts/Layout.astro';
 import { findDiaryDayByDate, listDiaryDays } from '../../../../lib/published-content';
+import { withBasePath } from '../../../../lib/site-path';
 
 export function getStaticPaths() {
   return listDiaryDays().map((day) => ({
@@ -39,7 +40,7 @@ const DayContent = diaryDay.Content;
             {diaryDay.entries.map((entry) => (
               <li>
                 <span>{entry.time}</span>
-                <a href={entry.url}>{entry.id}</a>
+                <a href={withBasePath(entry.url)}>{entry.id}</a>
               </li>
             ))}
           </ul>

@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { findEntryById, listEntries } from '../../lib/published-content';
+import { withBasePath } from '../../lib/site-path';
 
 export function getStaticPaths() {
   return listEntries().map((entry) => ({
@@ -27,7 +28,7 @@ const EntryContent = entry.Content;
         {
           entry.dayUrl ? (
             <p class="day-link">
-              <a href={entry.dayUrl}>この日の一覧へ</a>
+              <a href={withBasePath(entry.dayUrl)}>この日の一覧へ</a>
             </p>
           ) : null
         }

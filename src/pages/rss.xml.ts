@@ -1,6 +1,7 @@
 import type { APIContext } from 'astro';
 
 import { listEntries } from '../lib/published-content';
+import { withBasePath } from '../lib/site-path';
 
 function escapeXml(value: string): string {
   return value
@@ -26,13 +27,13 @@ function asUtcString(value: string | undefined, fallback: string): string {
 
 export function GET(context: APIContext): Response {
   const site = context.site ?? new URL('https://example.com');
-  const feedUrl = new URL('/rss.xml', site).toString();
+  const feedUrl = new URL(withBasePath('/rss.xml'), site).toString();
   const now = new Date().toUTCString();
   const entries = listEntries().slice(0, 50);
 
   const itemsXml = entries
     .map((entry) => {
-      const entryUrl = new URL(entry.permalink, site).toString();
+      const entryUrl = new URL(withBasePath(entry.permalink), site).toString();
       const pubDate = asUtcString(
         entry.updatedAt ?? entry.createdAt ?? `${entry.date}T${entry.time}:00Z`,
         now,

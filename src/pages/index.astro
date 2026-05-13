@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { listDiaryDays, listEntries } from '../lib/published-content';
+import { withBasePath } from '../lib/site-path';
 
 const latestDays = listDiaryDays().slice(0, 14);
 const latestEntries = listEntries().slice(0, 20);
@@ -26,7 +27,7 @@ const latestEntries = listEntries().slice(0, 20);
 						<ul>
 							{latestDays.map((day) => (
 								<li>
-									<a href={day.permalink}>{day.title}</a>
+									<a href={withBasePath(day.permalink)}>{day.title}</a>
 									<span>{day.date}</span>
 								</li>
 							))}
@@ -44,7 +45,7 @@ const latestEntries = listEntries().slice(0, 20);
 						<ul>
 							{latestEntries.map((entry) => (
 								<li>
-									<a href={entry.permalink}>{entry.title}</a>
+									<a href={withBasePath(entry.permalink)}>{entry.title}</a>
 									<span>{entry.date} {entry.time}</span>
 								</li>
 							))}

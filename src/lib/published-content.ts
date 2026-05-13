@@ -1,3 +1,5 @@
+import { toLogicalPath } from './site-path';
+
 type FrontmatterRecord = Record<string, unknown>;
 
 type MarkdownModule = {
@@ -124,8 +126,8 @@ function toEntryDocument(
 
   const time = normalizeTime(stringValue(frontmatter.time) ?? '00:00');
   const title = stringValue(frontmatter.title) ?? `${date} ${time}`;
-  const permalink = stringValue(frontmatter.permalink) ?? `/entries/${id}/`;
-  const dayUrl = stringValue(frontmatter.dayUrl);
+  const permalink = toLogicalPath(stringValue(frontmatter.permalink)) ?? `/entries/${id}/`;
+  const dayUrl = toLogicalPath(stringValue(frontmatter.dayUrl));
   const createdAt = stringValue(frontmatter.createdAt);
   const updatedAt = stringValue(frontmatter.updatedAt);
 
@@ -164,7 +166,7 @@ function normalizeDayEntries(value: unknown): DiaryDayEntryRef[] {
       const record = entry as Record<string, unknown>;
       const id = stringValue(record.id);
       const time = normalizeTime(stringValue(record.time) ?? '00:00');
-      const url = stringValue(record.url);
+      const url = toLogicalPath(stringValue(record.url));
 
       if (!id || !url) {
         return null;

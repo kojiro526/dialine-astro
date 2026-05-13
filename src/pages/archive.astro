@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { listEntries } from '../lib/published-content';
+import { withBasePath } from '../lib/site-path';
 
 const entries = listEntries();
 const groups = new Map<string, typeof entries>();
@@ -31,7 +32,7 @@ for (const entry of entries) {
               <ul>
                 {monthEntries.map((entry) => (
                   <li>
-                    <a href={entry.permalink}>{entry.title}</a>
+                    <a href={withBasePath(entry.permalink)}>{entry.title}</a>
                     <span>{entry.date} {entry.time}</span>
                   </li>
                 ))}
