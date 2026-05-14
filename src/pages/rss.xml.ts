@@ -37,7 +37,7 @@ export function GET(context: APIContext): Response {
     .map((entry) => {
       const entryUrl = new URL(withBasePath(entry.permalink), site).toString();
       const pubDate = asUtcString(
-        entry.updatedAt ?? entry.createdAt ?? `${entry.date}T${entry.time}:00Z`,
+        entry.updatedAt ?? entry.createdAt ?? entry.entryAt ?? `${entry.date}T${entry.time}:00Z`,
         now,
       );
 

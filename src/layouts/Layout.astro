@@ -79,5 +79,82 @@ const navItems = [
 				<p class="content-shell py-6 text-sm text-muted">{siteMetadata.site.footerText}</p>
 			</footer>
 		</div>
+		<script is:inline>
+			const logicalDateFormatter = new Intl.DateTimeFormat(undefined, {
+				dateStyle: 'medium',
+				timeZone: 'UTC',
+			});
+			const localTimeFormatter = new Intl.DateTimeFormat(undefined, {
+				hour: '2-digit',
+				minute: '2-digit',
+				hour12: false,
+			});
+			const localDateTimeFormatter = new Intl.DateTimeFormat(undefined, {
+				dateStyle: 'medium',
+				timeStyle: 'short',
+				hour12: false,
+			});
+
+			function parseLogicalDate(value) {
+				if (!value) {
+					return null;
+				}
+
+				const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+				if (!match) {
+					return null;
+				}
+
+				return new Date(
+					Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])),
+				);
+			}
+
+			function parseInstant(value) {
+				if (!value) {
+					return null;
+				}
+
+				const parsed = new Date(value);
+				return Number.isNaN(parsed.getTime()) ? null : parsed;
+			}
+
+			function applyLocalizedTimes() {
+				document.querySelectorAll('time[data-format]').forEach((element) => {
+					const logicalDate = parseLogicalDate(
+						element.getAttribute('data-logical-date'),
+					);
+					const instant = parseInstant(element.getAttribute('datetime'));
+					const format = element.getAttribute('data-format');
+
+					if (format === 'logical-date' && logicalDate) {
+						element.textContent = logicalDateFormatter.format(logicalDate);
+						return;
+					}
+
+					if (format === 'time' && instant) {
+						element.textContent = localTimeFormatter.format(instant);
+						return;
+					}
+
+					if (format === 'datetime' && instant) {
+						element.textContent = localDateTimeFormatter.format(instant);
+						return;
+					}
+
+					if (format === 'logical-date-time' && logicalDate && instant) {
+						element.textContent = `${logicalDateFormatter.format(logicalDate)} ${localTimeFormatter.format(instant)}`;
+					}
+				});
+			}
+
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', applyLocalizedTimes, {
+					once: true,
+				});
+			} else {
+				applyLocalizedTimes();
+			}
+		</script>
 	</body>
 </html>

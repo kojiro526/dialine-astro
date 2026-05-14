@@ -12,6 +12,7 @@ type MarkdownModule = {
 export interface DiaryDayEntryRef {
   id: string;
   time: string;
+  entryAt?: string;
   url: string;
 }
 
@@ -35,6 +36,7 @@ export interface EntryDocument {
   title: string;
   date: string;
   time: string;
+  entryAt?: string;
   createdAt?: string;
   updatedAt?: string;
   permalink: string;
@@ -128,6 +130,7 @@ function toEntryDocument(
   const title = stringValue(frontmatter.title) ?? `${date} ${time}`;
   const permalink = toLogicalPath(stringValue(frontmatter.permalink)) ?? `/entries/${id}/`;
   const dayUrl = toLogicalPath(stringValue(frontmatter.dayUrl));
+  const entryAt = stringValue(frontmatter.entryAt);
   const createdAt = stringValue(frontmatter.createdAt);
   const updatedAt = stringValue(frontmatter.updatedAt);
 
@@ -136,6 +139,7 @@ function toEntryDocument(
     title,
     date,
     time,
+    entryAt,
     createdAt,
     updatedAt,
     permalink,
@@ -145,6 +149,7 @@ function toEntryDocument(
     sourcePath,
     sortDate: resolveEntrySortDate({
       updatedAt,
+      entryAt,
       createdAt,
       date,
       time,
@@ -166,13 +171,14 @@ function normalizeDayEntries(value: unknown): DiaryDayEntryRef[] {
       const record = entry as Record<string, unknown>;
       const id = stringValue(record.id);
       const time = normalizeTime(stringValue(record.time) ?? '00:00');
+      const entryAt = stringValue(record.entryAt);
       const url = toLogicalPath(stringValue(record.url));
 
       if (!id || !url) {
         return null;
       }
 
-      return { id, time, url };
+      return { id, time, entryAt, url };
     })
     .filter((entry): entry is DiaryDayEntryRef => entry !== null);
 }
@@ -195,12 +201,14 @@ function toExcerpt(source: string): string {
 
 function resolveEntrySortDate(value: {
   updatedAt?: string;
+  entryAt?: string;
   createdAt?: string;
   date: string;
   time: string;
 }): Date {
   const candidates = [
     value.updatedAt,
+    value.entryAt,
     value.createdAt,
     `${value.date}T${value.time}:00Z`,
   ];

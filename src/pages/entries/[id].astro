@@ -50,17 +50,17 @@ const EntryContent = entry.Content;
           <dl class="mt-4 grid gap-4">
             <div>
               <dt class="text-xs font-semibold uppercase tracking-[0.12em] text-primary-muted">Date</dt>
-              <dd class="mt-1 text-base font-medium text-ink">{entry.date}</dd>
+              <dd class="mt-1 text-base font-medium text-ink"><time datetime={`${entry.date}T00:00:00Z`} data-format="logical-date" data-logical-date={entry.date}>{entry.date}</time></dd>
             </div>
             <div>
               <dt class="text-xs font-semibold uppercase tracking-[0.12em] text-primary-muted">Time</dt>
-              <dd class="mt-1 text-base font-medium tabular-nums text-ink">{entry.time}</dd>
+              <dd class="mt-1 text-base font-medium tabular-nums text-ink"><time datetime={entry.entryAt ?? `${entry.date}T${entry.time}:00Z`} data-format="time">{entry.time}</time></dd>
             </div>
             {
               entry.updatedAt ? (
                 <div>
                   <dt class="text-xs font-semibold uppercase tracking-[0.12em] text-primary-muted">Updated</dt>
-                  <dd class="mt-1 break-all text-sm text-muted">{entry.updatedAt}</dd>
+                  <dd class="mt-1 break-all text-sm text-muted"><time datetime={entry.updatedAt} data-format="datetime">{entry.updatedAt}</time></dd>
                 </div>
               ) : null
             }

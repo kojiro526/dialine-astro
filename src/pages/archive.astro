@@ -38,7 +38,7 @@ for (const entry of entries) {
               <ul class="mt-3 divide-y divide-line/70">
                 {monthEntries.map((entry) => (
                   <li class="grid gap-2 py-3 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-baseline">
-                    <time class="metadata-text whitespace-nowrap" datetime={`${entry.date}T${entry.time}`}>{entry.date} {entry.time}</time>
+                    <time class="metadata-text whitespace-nowrap" datetime={entry.entryAt ?? entry.updatedAt ?? entry.createdAt ?? `${entry.date}T${entry.time}:00Z`} data-format="logical-date-time" data-logical-date={entry.date}>{entry.date} {entry.time}</time>
                     <a class="quiet-link font-medium" href={withBasePath(entry.permalink)}>{entry.title}</a>
                   </li>
                 ))}
