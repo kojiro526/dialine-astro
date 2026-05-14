@@ -104,6 +104,10 @@
     @apply border-l-2 border-primary/40 pl-4 text-muted;
   }
 
+  .markdown-body hr {
+    @apply my-8 border-0 border-t border-line/45;
+  }
+
   .markdown-body code {
     @apply rounded bg-primary-soft px-1.5 py-0.5 text-[0.9em] text-primary;
   }
@@ -114,5 +118,21 @@
 
   .markdown-body pre code {
     @apply bg-transparent p-0 text-inherit;
+  }
+
+  .markdown-body .entry-footnote {
+    @apply mt-4 flex flex-wrap items-center gap-2 text-sm text-muted;
+  }
+
+  .markdown-body .entry-footnote a {
+    @apply font-medium text-muted no-underline transition-colors hover:text-primary hover:underline;
+  }
+
+  .markdown-body .entry-footnote-time {
+    @apply tabular-nums;
+  }
+
+  .markdown-body .entry-footnote-separator {
+    @apply text-line;
   }
 }

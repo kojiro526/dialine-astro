@@ -42,9 +42,12 @@ const homeIntroLines = siteMetadata.home.intro.split('\n');
 					) : (
 						<ul class="divide-y divide-line/70">
 							{latestEntries.map((entry) => (
-								<li class="grid gap-2 py-3 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-baseline">
+								<li class="grid gap-2 py-3 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-start">
 									<time class="metadata-text whitespace-nowrap" datetime={`${entry.date}T${entry.time}`}>{entry.date} {entry.time}</time>
-									<a class="quiet-link font-medium" href={withBasePath(entry.permalink)}>{entry.title}</a>
+									<div class="min-w-0">
+										<a class="quiet-link block font-medium" href={withBasePath(entry.permalink)}>{entry.title}</a>
+										<p class="mt-1 overflow-hidden text-ellipsis whitespace-nowrap text-sm text-muted">{entry.excerpt || entry.title}</p>
+									</div>
 								</li>
 							))}
 						</ul>

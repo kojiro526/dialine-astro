@@ -20,6 +20,7 @@ const day = Astro.params.day ?? '';
 const date = `${year}-${month}-${day}`;
 const diaryDay = findDiaryDayByDate(date);
 const siteMetadata = loadSiteMetadata();
+const diaryDayEntryCount = diaryDay?.entries.length ?? 0;
 
 if (!diaryDay) {
   throw new Error(`Diary day not found: ${date}`);
@@ -32,35 +33,59 @@ const DayContent = diaryDay.Content;
   title={`${diaryDay.title} | ${siteMetadata.site.title}`}
   description={diaryDay.excerpt || siteMetadata.site.description}
 >
-  <main class="content-shell max-w-5xl py-8 sm:py-10 lg:py-12">
-    <article class="surface-panel p-5 sm:p-7">
-      <header>
-        <p class="metadata-text">{diaryDay.date}</p>
-        <h1 class="mt-3 text-2xl font-semibold leading-tight tracking-normal text-ink sm:text-3xl">{diaryDay.title}</h1>
-      </header>
+  <main class="content-shell py-8 sm:py-10 lg:py-12">
+    <section class="grid gap-5 lg:grid-cols-[minmax(0,1.42fr)_minmax(280px,0.8fr)] lg:items-start">
+      <article class="surface-panel p-5 sm:p-7">
+        <header>
+          <p class="section-label">Day</p>
+          <h1 class="mt-3 text-2xl font-semibold leading-tight tracking-normal text-ink sm:text-3xl">{diaryDay.title}</h1>
+          <p class="mt-3 max-w-2xl text-sm leading-7 text-muted">
+            この日の公開エントリーを時系列で表示しています。各エントリー末尾のリンクから個別ページへ移動できます。
+          </p>
+        </header>
 
-      {
-        diaryDay.entries.length > 0 ? (
-          <ul class="mt-6 grid gap-2 border-y border-line py-4">
-            {diaryDay.entries.map((entry) => (
-              <li class="grid gap-2 sm:grid-cols-[4.5rem_minmax(0,1fr)] sm:items-baseline">
-                <span class="text-sm tabular-nums text-muted">{entry.time}</span>
-                <a class="quiet-link font-medium" href={withBasePath(entry.url)}>{entry.id}</a>
-              </li>
-            ))}
-          </ul>
-        ) : null
-      }
+        {
+          typeof DayContent === 'function' ? (
+            <div class="markdown-body mt-7 border-t border-line/60 pt-7">
+              <DayContent />
+            </div>
+          ) : (
+            <p class="mt-7 border-t border-line/60 pt-7 text-sm text-muted">{siteMetadata.day.contentUnavailableText}</p>
+          )
+        }
+      </article>
 
-      {
-        typeof DayContent === 'function' ? (
-          <div class="markdown-body mt-7">
-            <DayContent />
+      <aside class="grid gap-5 lg:sticky lg:top-8">
+        <section class="surface-panel p-4 sm:p-5">
+          <p class="section-label">Overview</p>
+          <dl class="mt-4 grid gap-4">
+            <div>
+              <dt class="text-xs font-semibold uppercase tracking-[0.12em] text-primary-muted">Date</dt>
+              <dd class="mt-1 text-base font-medium text-ink">{diaryDay.date}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-semibold uppercase tracking-[0.12em] text-primary-muted">Entries</dt>
+              <dd class="mt-1 text-base font-medium text-ink">{diaryDayEntryCount}件</dd>
+            </div>
+            {
+              diaryDay.updatedAt ? (
+                <div>
+                  <dt class="text-xs font-semibold uppercase tracking-[0.12em] text-primary-muted">Updated</dt>
+                  <dd class="mt-1 break-all text-sm text-muted">{diaryDay.updatedAt}</dd>
+                </div>
+              ) : null
+            }
+          </dl>
+        </section>
+
+        <section class="surface-panel p-4 sm:p-5">
+          <p class="section-label">Navigate</p>
+          <div class="mt-4 grid gap-2">
+            <a class="quiet-link rounded-md border border-line/80 bg-paper-soft px-3 py-2 font-medium" href={withBasePath('/')}>トップへ戻る</a>
+            <a class="quiet-link rounded-md border border-line/80 bg-paper-soft px-3 py-2 font-medium" href={withBasePath('/archive/')}>アーカイブを見る</a>
           </div>
-        ) : (
-          <p class="mt-7 text-sm text-muted">{siteMetadata.day.contentUnavailableText}</p>
-        )
-      }
-    </article>
+        </section>
+      </aside>
+    </section>
   </main>
 </Layout>

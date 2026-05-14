@@ -97,6 +97,13 @@ function rewriteNode(node, basePath) {
 		return;
 	}
 
+	if (
+		(node.type === 'raw' || node.type === 'html') &&
+		typeof node.value === 'string'
+	) {
+		node.value = rewriteRawHtml(node.value, basePath);
+	}
+
 	if (node.type === 'element' && node.properties) {
 		rewriteUrlProperty(node.properties, 'href', basePath);
 		rewriteUrlProperty(node.properties, 'src', basePath);
@@ -109,6 +116,15 @@ function rewriteNode(node, basePath) {
 			rewriteNode(child, basePath);
 		}
 	}
+}
+
+function rewriteRawHtml(value, basePath) {
+	return value.replace(
+		/(href|src|poster)=(['"])(\/(?!\/)[^'"]*)\2/g,
+		(_, attribute, quote, url) => {
+			return `${attribute}=${quote}${joinBasePath(basePath, url)}${quote}`;
+		},
+	);
 }
 
 function rewriteUrlProperty(properties, key, basePath) {
