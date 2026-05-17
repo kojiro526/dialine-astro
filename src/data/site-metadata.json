@@ -6,8 +6,8 @@
     "footerText": "Powered by Astro template for Dialine publishing."
   },
   "profile": {
-    "avatarImagePath": null,
-    "faviconImagePath": null
+    "avatarImagePath": "/media/profile/avatar.png",
+    "faviconImagePath": "/media/profile/avatar-icon.png"
   },
   "navigation": {
     "homeLabel": "Home",
