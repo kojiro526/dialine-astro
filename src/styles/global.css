@@ -57,6 +57,26 @@
     @apply text-sm text-muted;
   }
 
+  .site-avatar {
+    @apply block shrink-0 rounded-2xl border border-line/80 bg-surface object-cover shadow-paper;
+  }
+
+  .site-avatar--header {
+    @apply h-12 w-12 rounded-xl;
+  }
+
+  .site-avatar--hero {
+    @apply h-24 w-24 rounded-[1.75rem] sm:h-32 sm:w-32;
+  }
+
+  .profile-hero {
+    @apply grid gap-5 sm:grid-cols-[auto_minmax(0,1fr)] sm:items-center sm:gap-6;
+  }
+
+  .profile-hero-copy {
+    @apply min-w-0;
+  }
+
   .markdown-body {
     @apply text-[1rem] leading-8 text-ink;
   }

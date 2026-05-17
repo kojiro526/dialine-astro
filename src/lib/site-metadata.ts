@@ -12,6 +12,10 @@ export interface SiteMetadata {
     language: string;
     footerText: string;
   };
+  profile: {
+    avatarImagePath: string | null;
+    faviconImagePath: string | null;
+  };
   navigation: {
     homeLabel: string;
     archiveLabel: string;
@@ -55,6 +59,10 @@ const defaultSiteMetadata: SiteMetadata = {
     description: '公開日記のサイトテンプレート',
     language: 'ja',
     footerText: 'Powered by Astro template for Dialine publishing.',
+  },
+  profile: {
+    avatarImagePath: null,
+    faviconImagePath: null,
   },
   navigation: {
     homeLabel: 'Home',
@@ -110,6 +118,7 @@ function readJsonFile<T>(filePath: string): T | null {
 
 function mergeSiteMetadata(source: Record<string, unknown> | null): SiteMetadata {
   const site = asRecord(source?.site);
+  const profile = asRecord(source?.profile);
   const navigation = asRecord(source?.navigation);
   const home = asRecord(source?.home);
   const archive = asRecord(source?.archive);
@@ -123,6 +132,12 @@ function mergeSiteMetadata(source: Record<string, unknown> | null): SiteMetadata
       description: stringValue(site.description) ?? defaultSiteMetadata.site.description,
       language: stringValue(site.language) ?? defaultSiteMetadata.site.language,
       footerText: stringValue(site.footerText) ?? defaultSiteMetadata.site.footerText,
+    },
+    profile: {
+      avatarImagePath:
+        stringValue(profile.avatarImagePath) ?? defaultSiteMetadata.profile.avatarImagePath,
+      faviconImagePath:
+        stringValue(profile.faviconImagePath) ?? defaultSiteMetadata.profile.faviconImagePath,
     },
     navigation: {
       homeLabel: stringValue(navigation.homeLabel) ?? defaultSiteMetadata.navigation.homeLabel,

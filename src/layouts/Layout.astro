@@ -15,6 +15,13 @@ const {
 } = Astro.props;
 
 const pathname = toLogicalPath(Astro.url.pathname) ?? '/';
+const avatarPath = withBasePath(
+	siteMetadata.profile.avatarImagePath ?? '/media/profile/default-avatar.svg',
+);
+const faviconPath = siteMetadata.profile.faviconImagePath
+	? withBasePath(siteMetadata.profile.faviconImagePath)
+	: null;
+const avatarAlt = `${siteMetadata.site.title} avatar`;
 
 const navItems = [
 	{
@@ -40,8 +47,19 @@ const navItems = [
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href={withBasePath('/favicon.svg')} />
-		<link rel="icon" href={withBasePath('/favicon.ico')} />
+		{
+			faviconPath ? (
+				<>
+					<link rel="icon" type="image/png" href={faviconPath} />
+					<link rel="apple-touch-icon" href={faviconPath} />
+				</>
+			) : (
+				<>
+					<link rel="icon" type="image/svg+xml" href={withBasePath('/favicon.svg')} />
+					<link rel="icon" href={withBasePath('/favicon.ico')} />
+				</>
+			)
+		}
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		<title>{title}</title>
@@ -50,7 +68,14 @@ const navItems = [
 		<div class="grid min-h-screen grid-rows-[auto_1fr_auto]">
 			<header class="border-b border-line/70 bg-paper-soft/82 backdrop-blur">
 				<div class="content-shell flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:py-5">
-					<a class="inline-flex items-baseline gap-2 text-lg font-semibold tracking-normal text-ink no-underline" href={withBasePath('/')}>
+					<a class="inline-flex items-center gap-3 text-lg font-semibold tracking-normal text-ink no-underline" href={withBasePath('/')}>
+						<img
+							class="site-avatar site-avatar--header"
+							src={avatarPath}
+							alt={avatarAlt}
+							width="48"
+							height="48"
+						/>
 						<span>{siteMetadata.site.title}</span>
 						<span class="hidden h-1.5 w-1.5 rounded-full bg-primary sm:inline-block"></span>
 					</a>

@@ -5,6 +5,10 @@
     "language": "ja",
     "footerText": "Powered by Astro template for Dialine publishing."
   },
+  "profile": {
+    "avatarImagePath": null,
+    "faviconImagePath": null
+  },
   "navigation": {
     "homeLabel": "Home",
     "archiveLabel": "Archive",
