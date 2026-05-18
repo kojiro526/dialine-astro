@@ -58,15 +58,15 @@
   }
 
   .site-avatar {
-    @apply block shrink-0 rounded-2xl border border-line/80 bg-surface object-cover shadow-paper;
+    @apply block shrink-0 rounded-full border border-line/80 bg-surface object-cover shadow-paper;
   }
 
   .site-avatar--header {
-    @apply h-12 w-12 rounded-xl;
+    @apply h-12 w-12;
   }
 
   .site-avatar--hero {
-    @apply h-24 w-24 rounded-[1.75rem] sm:h-32 sm:w-32;
+    @apply h-24 w-24 sm:h-32 sm:w-32;
   }
 
   .profile-hero {
