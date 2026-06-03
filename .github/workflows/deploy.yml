@@ -20,6 +20,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    env:
+      DIALINE_BASE_PATH: ${{ vars.DIALINE_BASE_PATH }}
 
     steps:
       - name: Checkout
