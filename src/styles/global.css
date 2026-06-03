@@ -155,4 +155,25 @@
   .markdown-body .entry-footnote-separator {
     @apply text-line;
   }
+
+  .markdown-body .entry-media-grid {
+    @apply my-5 grid grid-cols-2 gap-2 sm:gap-3;
+  }
+
+  .markdown-body .entry-media-grid img {
+    @apply block h-full w-full rounded-md border border-line/70 bg-surface-muted object-cover;
+    aspect-ratio: 1 / 1;
+  }
+
+  @media (min-width: 768px) {
+    .markdown-body .entry-media-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .markdown-body .entry-media-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
 }

@@ -21,9 +21,71 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 	},
 	markdown: {
-		rehypePlugins: [prefixRootRelativeLinks(base)],
+		rehypePlugins: [
+			prefixRootRelativeLinks(base),
+			groupConsecutiveImages(),
+		],
 	},
 });
+
+function groupConsecutiveImages() {
+	return function transform(tree) {
+		groupNodeChildren(tree);
+	};
+}
+
+function groupNodeChildren(node) {
+	if (!node || typeof node !== 'object' || !Array.isArray(node.children)) {
+		return;
+	}
+
+	for (const child of node.children) {
+		groupNodeChildren(child);
+	}
+
+	const groupedChildren = [];
+	let bufferedImages = [];
+
+	const flushImages = () => {
+		if (bufferedImages.length === 0) {
+			return;
+		}
+
+		groupedChildren.push({
+			type: 'element',
+			tagName: 'div',
+			properties: { className: ['entry-media-grid'] },
+			children: bufferedImages,
+		});
+		bufferedImages = [];
+	};
+
+	for (const child of node.children) {
+		if (isImageOnlyParagraph(child)) {
+			bufferedImages.push(child.children[0]);
+			continue;
+		}
+
+		flushImages();
+		groupedChildren.push(child);
+	}
+
+	flushImages();
+	node.children = groupedChildren;
+}
+
+function isImageOnlyParagraph(node) {
+	if (!node || node.type !== 'element' || node.tagName !== 'p') {
+		return false;
+	}
+
+	if (!Array.isArray(node.children) || node.children.length !== 1) {
+		return false;
+	}
+
+	const [child] = node.children;
+	return child?.type === 'element' && child?.tagName === 'img';
+}
 
 function resolveSiteUrl({ explicitSiteUrl, repository }) {
 	const explicit = normalizeSiteUrl(explicitSiteUrl);
