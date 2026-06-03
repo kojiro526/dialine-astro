@@ -56,6 +56,19 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Debug built HTML paths
+        run: |
+          echo "Checking generated HTML under dist"
+          find dist -type f -name '*.html' | head -n 10
+          echo "--- /dialine-astro/media matches ---"
+          grep -R -n '/dialine-astro/media/' dist || true
+          echo "--- root-relative /media matches ---"
+          grep -R -n '"/media/' dist || true
+          echo "--- /dialine-astro/_astro matches ---"
+          grep -R -n '/dialine-astro/_astro/' dist || true
+          echo "--- root-relative /_astro matches ---"
+          grep -R -n '"/_astro/' dist || true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
