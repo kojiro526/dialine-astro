@@ -43,6 +43,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Debug build environment
+        env:
+          VARS_DIALINE_BASE_PATH: ${{ vars.DIALINE_BASE_PATH }}
+        run: |
+          echo "DIALINE_BASE_PATH=${DIALINE_BASE_PATH:-<empty>}"
+          echo "DIALINE_SITE_URL=${DIALINE_SITE_URL:-<empty>}"
+          echo "vars.DIALINE_BASE_PATH=${VARS_DIALINE_BASE_PATH:-<empty>}"
+          echo "GITHUB_REPOSITORY=${GITHUB_REPOSITORY:-<empty>}"
+          echo "GITHUB_REF=${GITHUB_REF:-<empty>}"
+
       - name: Build
         run: pnpm run build
 
