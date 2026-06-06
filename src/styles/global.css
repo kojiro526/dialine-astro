@@ -140,38 +140,46 @@
     @apply bg-transparent p-0 text-inherit;
   }
 
+  .entry-footnote,
   .markdown-body .entry-footnote {
     @apply mt-4 flex flex-wrap items-center gap-2 text-sm text-muted;
   }
 
+  .entry-footnote a,
   .markdown-body .entry-footnote a {
     @apply font-medium text-muted no-underline transition-colors hover:text-primary hover:underline;
   }
 
+  .entry-footnote-time,
   .markdown-body .entry-footnote-time {
     @apply tabular-nums;
   }
 
+  .entry-footnote-separator,
   .markdown-body .entry-footnote-separator {
     @apply text-line;
   }
 
+  .entry-media-grid,
   .markdown-body .entry-media-grid {
     @apply my-5 grid grid-cols-2 gap-2 sm:gap-3;
   }
 
+  .entry-media-grid img,
   .markdown-body .entry-media-grid img {
     @apply block h-full w-full rounded-md border border-line/70 bg-surface-muted object-cover;
     aspect-ratio: 1 / 1;
   }
 
   @media (min-width: 768px) {
+    .entry-media-grid,
     .markdown-body .entry-media-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
   @media (min-width: 1024px) {
+    .entry-media-grid,
     .markdown-body .entry-media-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }

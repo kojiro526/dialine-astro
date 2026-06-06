@@ -42,6 +42,22 @@ const EntryContent = entry.Content;
             <p class="mt-7 border-t border-line/60 pt-7 text-sm text-muted">{siteMetadata.entry.contentUnavailableText}</p>
           )
         }
+
+        {
+          entry.images.length > 0 ? (
+            <div class="entry-media-grid">
+              {entry.images.map((image) => (
+                <img
+                  src={withBasePath(image.url)}
+                  alt={image.alt}
+                  width={image.width ?? undefined}
+                  height={image.height ?? undefined}
+                  loading="lazy"
+                />
+              ))}
+            </div>
+          ) : null
+        }
       </article>
 
       <aside class="grid gap-5 lg:sticky lg:top-8">

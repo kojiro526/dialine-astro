@@ -9,6 +9,7 @@ createdAt: "2026-05-13T16:49:24.650029Z"
 updatedAt: "2026-05-13T16:49:24.650029Z"
 permalink: "/entries/entry_01KRH3WF5B28SCMNJQAJTRZ57V/"
 dayUrl: "/diary/2026/05/13/"
+images: []
 ---
 
 強烈なこむら返り起こして悶えた。グレープフルーツジュースを飲むべきか（マスターキートン知識）

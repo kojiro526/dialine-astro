@@ -9,6 +9,7 @@ createdAt: "2026-05-12T16:03:20.452335Z"
 updatedAt: "2026-05-12T16:03:20.452335Z"
 permalink: "/entries/entry_01KREEVCRA32Q47GSS8RT7D6QX/"
 dayUrl: "/diary/2026/05/13/"
+images: []
 ---
 
 Astroの使い方を調べてみる

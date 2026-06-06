@@ -9,6 +9,7 @@ createdAt: "2026-05-14T10:08:59.017270Z"
 updatedAt: "2026-05-14T10:11:17.384023Z"
 permalink: "/entries/entry_01KRJZBZMB5654X3TMG9AFVYPV/"
 dayUrl: "/diary/2026/05/14/"
+images: []
 ---
 
 https://x.com/i/status/2054849465174069346

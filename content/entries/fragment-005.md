@@ -9,6 +9,7 @@ createdAt: "2026-05-09T09:22:00.000Z"
 updatedAt: "2026-05-09T09:24:00.000Z"
 permalink: "/entries/fragment-005/"
 dayUrl: "/diary/2026/05/09/"
+images: []
 ---
 
 夕方に設計を整理。Dialine は入力の軽さが価値だと改めて見えた。

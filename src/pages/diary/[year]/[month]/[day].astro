@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../../layouts/Layout.astro';
-import { findDiaryDayByDate, listDiaryDays } from '../../../../lib/published-content';
+import { findDiaryDayByDate, findEntryById, listDiaryDays } from '../../../../lib/published-content';
 import { withBasePath } from '../../../../lib/site-path';
 import { loadSiteMetadata } from '../../../../lib/site-metadata';
 
@@ -19,19 +19,24 @@ const month = Astro.params.month ?? '';
 const day = Astro.params.day ?? '';
 const date = `${year}-${month}-${day}`;
 const diaryDay = findDiaryDayByDate(date);
-const siteMetadata = loadSiteMetadata();
-const diaryDayEntryCount = diaryDay?.entries.length ?? 0;
 
 if (!diaryDay) {
   throw new Error(`Diary day not found: ${date}`);
 }
 
-const DayContent = diaryDay.Content;
+const siteMetadata = loadSiteMetadata();
+const dayEntries = diaryDay.entries.flatMap((entryRef) => {
+  const entry = findEntryById(entryRef.id);
+  return entry == null ? [] : [{ entryRef, entry }];
+});
+const diaryDayEntryCount = dayEntries.length;
+const diaryDayDescription =
+  diaryDay.excerpt || dayEntries[0]?.entry.excerpt || siteMetadata.site.description;
 ---
 
 <Layout
   title={`${diaryDay.title} | ${siteMetadata.site.title}`}
-  description={diaryDay.excerpt || siteMetadata.site.description}
+  description={diaryDayDescription}
 >
   <main class="content-shell py-8 sm:py-10 lg:py-12">
     <section class="grid gap-5 lg:grid-cols-[minmax(0,1.42fr)_minmax(280px,0.8fr)] lg:items-start">
@@ -45,9 +50,76 @@ const DayContent = diaryDay.Content;
         </header>
 
         {
-          typeof DayContent === 'function' ? (
-            <div class="markdown-body mt-7 border-t border-line/60 pt-7">
-              <DayContent />
+          dayEntries.length > 0 ? (
+            <div class="mt-7 border-t border-line/60 pt-7">
+              {dayEntries.map(({ entryRef, entry }, index) => {
+                const EntryContent = entry.Content;
+                const entryTime = entryRef.time || entry.time;
+                const entryAt =
+                  entryRef.entryAt ??
+                  entry.entryAt ??
+                  entry.updatedAt ??
+                  entry.createdAt ??
+                  `${entry.date}T${entry.time}:00Z`;
+
+                return (
+                  <section class:list={[
+                    'py-1',
+                    index < dayEntries.length - 1
+                      ? 'mb-8 border-b border-line/60 pb-8'
+                      : '',
+                  ]}>
+                    <div class="flex items-center justify-between gap-4">
+                      <p class="section-label">Entry</p>
+                      <time
+                        class="metadata-text whitespace-nowrap"
+                        datetime={entryAt}
+                        data-format="time"
+                      >
+                        {entryTime}
+                      </time>
+                    </div>
+
+                    {
+                      typeof EntryContent === 'function' ? (
+                        <div class="markdown-body mt-4">
+                          <EntryContent />
+                        </div>
+                      ) : (
+                        <p class="mt-4 text-sm text-muted">{siteMetadata.entry.contentUnavailableText}</p>
+                      )
+                    }
+
+                    {
+                      entry.images.length > 0 ? (
+                        <div class="entry-media-grid">
+                          {entry.images.map((image) => (
+                            <img
+                              src={withBasePath(image.url)}
+                              alt={image.alt}
+                              width={image.width ?? undefined}
+                              height={image.height ?? undefined}
+                              loading="lazy"
+                            />
+                          ))}
+                        </div>
+                      ) : null
+                    }
+
+                    <p class="entry-footnote">
+                      <time
+                        class="entry-footnote-time"
+                        datetime={entryAt}
+                        data-format="time"
+                      >
+                        {entryTime}
+                      </time>
+                      <span class="entry-footnote-separator">·</span>
+                      <a href={withBasePath(entryRef.url)}>投稿ページ</a>
+                    </p>
+                  </section>
+                );
+              })}
             </div>
           ) : (
             <p class="mt-7 border-t border-line/60 pt-7 text-sm text-muted">{siteMetadata.day.contentUnavailableText}</p>

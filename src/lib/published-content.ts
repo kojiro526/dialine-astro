@@ -16,6 +16,17 @@ export interface DiaryDayEntryRef {
   url: string;
 }
 
+export interface EntryImageRef {
+  id?: string;
+  alt: string;
+  url: string;
+  fileName?: string;
+  mimeType?: string;
+  width?: number;
+  height?: number;
+  sortOrder?: number;
+}
+
 export interface DiaryDayDocument {
   date: string;
   title: string;
@@ -41,6 +52,7 @@ export interface EntryDocument {
   updatedAt?: string;
   permalink: string;
   dayUrl?: string;
+  images: EntryImageRef[];
   excerpt: string;
   Content: unknown;
   sourcePath: string;
@@ -133,6 +145,7 @@ function toEntryDocument(
   const entryAt = stringValue(frontmatter.entryAt);
   const createdAt = stringValue(frontmatter.createdAt);
   const updatedAt = stringValue(frontmatter.updatedAt);
+  const images = normalizeEntryImages(frontmatter.images);
 
   return {
     id,
@@ -144,6 +157,7 @@ function toEntryDocument(
     updatedAt,
     permalink,
     dayUrl,
+    images,
     excerpt: toExcerpt(moduleValue.rawContent?.() ?? title),
     Content: moduleValue.Content ?? moduleValue.default,
     sourcePath,
@@ -155,6 +169,47 @@ function toEntryDocument(
       time,
     }),
   };
+}
+
+function normalizeEntryImages(value: unknown): EntryImageRef[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .map((image) => {
+      if (!image || typeof image !== 'object') {
+        return null;
+      }
+
+      const record = image as Record<string, unknown>;
+      const alt = stringValue(record.alt) ?? stringValue(record.fileName) ?? 'image';
+      const url = toLogicalPath(stringValue(record.url));
+
+      if (!url) {
+        return null;
+      }
+
+      return {
+        id: stringValue(record.id),
+        alt,
+        url,
+        fileName: stringValue(record.fileName),
+        mimeType: stringValue(record.mimeType),
+        width: integerValue(record.width),
+        height: integerValue(record.height),
+        sortOrder: integerValue(record.sortOrder),
+      };
+    })
+    .filter((image): image is EntryImageRef => image !== null)
+    .sort((left, right) => {
+      const order = (left.sortOrder ?? 0) - (right.sortOrder ?? 0);
+      if (order != 0) {
+        return order;
+      }
+
+      return left.url.localeCompare(right.url);
+    });
 }
 
 function normalizeDayEntries(value: unknown): DiaryDayEntryRef[] {
@@ -247,6 +302,19 @@ function stringValue(value: unknown): string | undefined {
 
   const normalized = value.trim();
   return normalized.length > 0 ? normalized : undefined;
+}
+
+function integerValue(value: unknown): number | undefined {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return Math.trunc(value);
+  }
+
+  if (typeof value === 'string') {
+    const parsed = Number.parseInt(value, 10);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  }
+
+  return undefined;
 }
 
 function isDateString(value: string): boolean {

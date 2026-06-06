@@ -9,6 +9,7 @@ createdAt: "2026-05-13T15:20:12.696757Z"
 updatedAt: "2026-05-13T15:20:12.696757Z"
 permalink: "/entries/entry_01KRGYS4MSD7D8NN851668NFD4/"
 dayUrl: "/diary/2026/05/14/"
+images: []
 ---
 
 プロジェクト・ヘイル・メアリーがアマプラに来たらしいのでもう一回観ようかな
