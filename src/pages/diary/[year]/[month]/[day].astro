@@ -1,4 +1,5 @@
 ---
+import EntryMediaGallery from '../../../../components/EntryMediaGallery.astro';
 import Layout from '../../../../layouts/Layout.astro';
 import { findDiaryDayByDate, findEntryById, listDiaryDays } from '../../../../lib/published-content';
 import { withBasePath } from '../../../../lib/site-path';
@@ -92,17 +93,7 @@ const diaryDayDescription =
 
                     {
                       entry.images.length > 0 ? (
-                        <div class="entry-media-grid">
-                          {entry.images.map((image) => (
-                            <img
-                              src={withBasePath(image.url)}
-                              alt={image.alt}
-                              width={image.width ?? undefined}
-                              height={image.height ?? undefined}
-                              loading="lazy"
-                            />
-                          ))}
-                        </div>
+                        <EntryMediaGallery images={entry.images} />
                       ) : null
                     }
 

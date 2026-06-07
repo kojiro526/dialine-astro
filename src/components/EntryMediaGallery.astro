@@ -1,0 +1,135 @@
+---
+import type { EntryImageRef } from '../lib/published-content';
+import { withBasePath } from '../lib/site-path';
+
+interface Props {
+  images: EntryImageRef[];
+}
+
+const { images } = Astro.props;
+---
+
+<div class="entry-media-gallery" data-entry-media-gallery>
+  <div class="entry-media-grid">
+    {images.map((image) => {
+      const imageSrc = withBasePath(image.url);
+      const imageAlt = image.alt.trim();
+      return (
+        <button
+          type="button"
+          class="entry-media-trigger"
+          data-entry-media-open
+          data-image-src={imageSrc}
+          data-image-alt={imageAlt}
+          aria-label={imageAlt ? `${imageAlt} を拡大表示` : '画像を拡大表示'}
+        >
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            width={image.width ?? undefined}
+            height={image.height ?? undefined}
+            loading="lazy"
+          />
+        </button>
+      );
+    })}
+  </div>
+
+  <dialog class="entry-media-dialog" data-entry-media-dialog aria-label="画像の全体表示">
+    <div class="entry-media-dialog__panel">
+      <div class="entry-media-dialog__toolbar">
+        <p class="entry-media-dialog__caption" data-entry-media-caption hidden></p>
+        <button type="button" class="entry-media-dialog__close" data-entry-media-close>閉じる</button>
+      </div>
+
+      <img class="entry-media-dialog__image" data-entry-media-full-image alt="" />
+    </div>
+  </dialog>
+</div>
+
+<script is:inline>
+  (() => {
+    const setupKey = '__dialineEntryMediaGallerySetup';
+    if (globalThis[setupKey]) {
+      return;
+    }
+    globalThis[setupKey] = true;
+
+    function initGallery(root) {
+      if (!(root instanceof HTMLElement) || root.dataset.entryMediaReady === 'true') {
+        return;
+      }
+      root.dataset.entryMediaReady = 'true';
+
+      const dialog = root.querySelector('[data-entry-media-dialog]');
+      const fullImage = root.querySelector('[data-entry-media-full-image]');
+      const caption = root.querySelector('[data-entry-media-caption]');
+
+      if (!(dialog instanceof HTMLDialogElement) || !(fullImage instanceof HTMLImageElement)) {
+        return;
+      }
+
+      const closeDialog = () => {
+        if (dialog.open) {
+          dialog.close();
+        }
+      };
+
+      root.querySelectorAll('[data-entry-media-open]').forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          const imageSrc = trigger.getAttribute('data-image-src');
+          if (!imageSrc) {
+            return;
+          }
+
+          const imageAlt = trigger.getAttribute('data-image-alt') ?? '';
+          fullImage.src = imageSrc;
+          fullImage.alt = imageAlt;
+
+          if (caption instanceof HTMLElement) {
+            caption.textContent = imageAlt;
+            caption.hidden = imageAlt.trim().length === 0;
+          }
+
+          dialog.showModal();
+          document.documentElement.classList.add('entry-media-dialog-open');
+        });
+      });
+
+      root.querySelectorAll('[data-entry-media-close]').forEach((button) => {
+        button.addEventListener('click', closeDialog);
+      });
+
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) {
+          closeDialog();
+        }
+      });
+
+      dialog.addEventListener('close', () => {
+        document.documentElement.classList.remove('entry-media-dialog-open');
+        fullImage.removeAttribute('src');
+        fullImage.alt = '';
+
+        if (caption instanceof HTMLElement) {
+          caption.textContent = '';
+          caption.hidden = true;
+        }
+      });
+    }
+
+    function initAllGalleries() {
+      document
+        .querySelectorAll('[data-entry-media-gallery]')
+        .forEach((root) => initGallery(root));
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAllGalleries, {
+        once: true,
+      });
+    } else {
+      initAllGalleries();
+    }
+  })();
+</script>

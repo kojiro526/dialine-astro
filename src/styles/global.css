@@ -160,15 +160,65 @@
     @apply text-line;
   }
 
+  .entry-media-gallery,
+  .markdown-body .entry-media-gallery {
+    @apply my-5;
+  }
+
   .entry-media-grid,
   .markdown-body .entry-media-grid {
-    @apply my-5 grid grid-cols-2 gap-2 sm:gap-3;
+    @apply grid grid-cols-2 gap-2 sm:gap-3;
+  }
+
+  .entry-media-trigger,
+  .markdown-body .entry-media-trigger {
+    @apply block cursor-zoom-in overflow-hidden rounded-md border border-line/70 bg-surface-muted p-0 text-left transition duration-150 hover:-translate-y-0.5 hover:shadow-paper focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/35;
+    aspect-ratio: 1 / 1;
   }
 
   .entry-media-grid img,
   .markdown-body .entry-media-grid img {
-    @apply block h-full w-full rounded-md border border-line/70 bg-surface-muted object-cover;
+    @apply block h-full w-full bg-surface-muted object-cover;
     aspect-ratio: 1 / 1;
+  }
+
+  .entry-media-dialog {
+    width: min(92vw, 1100px);
+    max-width: 1100px;
+    @apply rounded-2xl border border-line/60 bg-surface/95 p-0 text-ink shadow-paper;
+  }
+
+  .entry-media-dialog::backdrop {
+    background: rgb(31 42 39 / 0.74);
+    backdrop-filter: blur(8px);
+  }
+
+  .entry-media-dialog__panel {
+    @apply grid gap-3 p-3 sm:p-4;
+  }
+
+  .entry-media-dialog__toolbar {
+    @apply flex items-center justify-between gap-3;
+  }
+
+  .entry-media-dialog__caption {
+    @apply min-w-0 flex-1 truncate text-sm text-muted;
+  }
+
+  .entry-media-dialog__close {
+    @apply inline-flex shrink-0 items-center rounded-full border border-line/70 bg-paper-soft px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:border-primary/30 hover:text-primary;
+  }
+
+  .entry-media-dialog__image {
+    display: block;
+    width: 100%;
+    max-height: min(78vh, 960px);
+    object-fit: contain;
+    @apply rounded-xl bg-paper-soft;
+  }
+
+  html.entry-media-dialog-open {
+    overflow: hidden;
   }
 
   @media (min-width: 768px) {
