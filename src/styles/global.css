@@ -185,6 +185,9 @@
   .entry-media-dialog {
     width: min(92vw, 1100px);
     max-width: 1100px;
+    max-height: calc(100vh - 2rem);
+    margin: auto;
+    inset: 0;
     @apply rounded-2xl border border-line/60 bg-surface/95 p-0 text-ink shadow-paper;
   }
 
