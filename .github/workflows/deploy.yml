@@ -8,11 +8,6 @@ on:
       - '.dialine/**'
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -20,65 +15,49 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
+    permissions:
+      contents: read
     env:
       DIALINE_BASE_PATH: ${{ vars.DIALINE_BASE_PATH }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
         with:
-          node-version: 22
+          version: 11.1.2
+          run_install: false
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.19.0
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Debug build environment
-        env:
-          VARS_DIALINE_BASE_PATH: ${{ vars.DIALINE_BASE_PATH }}
-        run: |
-          echo "DIALINE_BASE_PATH=${DIALINE_BASE_PATH:-<empty>}"
-          echo "DIALINE_SITE_URL=${DIALINE_SITE_URL:-<empty>}"
-          echo "vars.DIALINE_BASE_PATH=${VARS_DIALINE_BASE_PATH:-<empty>}"
-          echo "GITHUB_REPOSITORY=${GITHUB_REPOSITORY:-<empty>}"
-          echo "GITHUB_REF=${GITHUB_REF:-<empty>}"
-
       - name: Build
         run: pnpm run build
-
-      - name: Debug built HTML paths
-        run: |
-          echo "Checking generated HTML under dist"
-          find dist -type f -name '*.html' | head -n 10
-          echo "--- /dialine-astro/media matches ---"
-          grep -R -n '/dialine-astro/media/' dist || true
-          echo "--- root-relative /media matches ---"
-          grep -R -n '"/media/' dist || true
-          echo "--- /dialine-astro/_astro matches ---"
-          grep -R -n '/dialine-astro/_astro/' dist || true
-          echo "--- root-relative /_astro matches ---"
-          grep -R -n '"/_astro/' dist || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./dist
+          path: dist
 
   deploy:
     environment:
       name: github-pages
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      pages: write
+      id-token: write
 
     steps:
       - name: Deploy to GitHub Pages
