@@ -1,71 +1,57 @@
-# Dialine Astro Template
+# Dialine Astro
 
-Dialine の GitHub 公開機能向けに作成した Astro テンプレートです。
+Dialine が保存した日記データを、`@dialine/astro-site` で静的サイトへ変換して GitHub Pages に公開するユーザーリポジトリです。
 
-- `content/diary` にある日別 Markdown を `/diary/YYYY/MM/DD/` で配信
-- `content/entries` にある投稿別 Markdown を `/entries/{entryId}/` で配信
-- `/archive/` で投稿一覧
-- `/rss.xml` で RSS フィード
+Astro のページ、レイアウト、スタイル、ビルド設定は npm パッケージが管理します。このリポジトリでは投稿データ、メディア、サイト表示設定だけを管理します。
 
 ## 必要環境
 
-- Node.js `>=22.12.0`
-
-このリポジトリは `pnpm` を使って依存関係を管理し、公開から 7 日未満の npm パッケージは既定で解決しません。
+- Node.js `>=22.19.0`
+- pnpm `11.1.2`
 
 ## セットアップ
-
-1. Corepack を有効化
-
-```sh
-corepack enable
-```
-
-2. 依存関係をインストール
 
 ```sh
 pnpm install --frozen-lockfile
 ```
 
-3. 開発サーバー起動
+開発サーバーを起動します。
 
 ```sh
-pnpm run dev
+pnpm dev
 ```
 
-4. 本番ビルド
+本番サイトを `dist/` に生成します。
 
 ```sh
-pnpm run build
+pnpm build
 ```
 
-## 重要ファイル
+## リポジトリ構成
 
-- `dialine.config.json`
-	- Flutter 側の公開処理が参照する設定ファイル
-	- `siteMetaPath` にサイト表示文言 JSON の保存先を宣言する
-- `content/diary/`
-	- 日別 Markdown の格納先
-- `content/entries/`
-	- 投稿別 Markdown の格納先
-- `public/media/`
-	- 添付メディアの格納先
-- `src/data/site-metadata.json`
-	- サイトタイトル、説明文、RSS 文言などの表示設定
-- `src/lib/site-metadata.ts`
-	- `dialine.config.json` の `siteMetaPath` を読み、表示設定 JSON をロードする
-- `src/styles/global.css`
-	- Tailwind CSS の design token と Markdown 本文の基本スタイル
-- `.github/workflows/deploy.yml`
-	- GitHub Pages 用デプロイ workflow
+```text
+.
+├─ dialine.config.json
+├─ content/
+│  ├─ diary/YYYY/MM/YYYY-MM-DD.md
+│  └─ entries/{entryId}.md
+├─ public/
+│  └─ media/
+├─ src/data/site-metadata.json
+├─ package.json
+├─ pnpm-lock.yaml
+└─ pnpm-workspace.yaml
+```
 
-## デザイン調整
+- `dialine.config.json`: Dialineアプリが参照する公開設定
+- `content/diary/`: 日別Markdown
+- `content/entries/`: 投稿別Markdown
+- `public/media/`: 添付画像とプロフィール画像
+- `src/data/site-metadata.json`: サイトタイトル、説明文、フッター、RSS文言
 
-- このテンプレートは Tailwind CSS を使ってレイアウトと配色を定義します
-- アプリ本体に近い落ち着いた teal / warm paper 系のトーンを `src/styles/global.css` に集約しています
-- ページ固有の構造は各 `.astro` ファイルの Tailwind class で調整します
+`src/data/site-metadata.json` はschema version 1との互換性のため、このパスを維持します。Astroのソースコードではありません。
 
-## URL 構成
+## URL構成
 
 - Home: `/`
 - Archive: `/archive/`
@@ -73,86 +59,22 @@ pnpm run build
 - Entry: `/entries/{entryId}/`
 - RSS: `/rss.xml`
 
-## サイト文言の設定
+## GitHub Pages
 
-- サイトタイトル、説明文、フッター、ホーム説明、RSS 文言は `src/data/site-metadata.json` から読み込みます
-- 読み込む JSON のパスは `dialine.config.json` の `siteMetaPath` で宣言します
-- Dialine アプリの設定画面からは、この `siteMetaPath` で指定された JSON を GitHub Contents API 経由で更新する想定です
+`.github/workflows/deploy.yml` が、`main` へのpush時に依存関係を固定lockfileからインストールし、`pnpm build` の出力をGitHub Pagesへデプロイします。
 
-## Markdown frontmatter 例
+通常のproject siteでは、`GITHUB_REPOSITORY` から `https://<user>.github.io/<repo>/` とbase pathを自動推定します。
 
-### 投稿別 (`content/entries/{entryId}.md`)
+独自ドメインなどを使う場合は、GitHub ActionsのVariablesに次を設定します。
 
-```md
----
-type: "diary_entry"
-id: "entry_01HXABC"
-title: "2026-05-12 09:12"
-date: "2026-05-12"
-time: "09:12"
-createdAt: "2026-05-12T09:12:00+09:00"
-updatedAt: "2026-05-12T09:12:00+09:00"
-permalink: "/entries/entry_01HXABC/"
-dayUrl: "/diary/2026/05/12/"
----
+- `DIALINE_SITE_URL`: 完全な公開URL
+- `DIALINE_BASE_PATH`: 自動推定と異なるbase pathが必要な場合のみ
 
-朝に散歩した。
-```
+## パッケージ更新
 
-### 日別 (`content/diary/YYYY/MM/YYYY-MM-DD.md`)
-
-```md
----
-type: "diary_day"
-date: "2026-05-12"
-title: "2026-05-12"
-updatedAt: "2026-05-12T22:10:00+09:00"
-entries:
-	- id: "entry_01HXABC"
-		time: "09:12"
-		createdAt: "2026-05-12T09:12:00+09:00"
-		updatedAt: "2026-05-12T09:12:00+09:00"
-		url: "/entries/entry_01HXABC/"
----
-
-## 09:12
-
-朝に散歩した。
-```
-
-## GitHub Pages 設定
-
-このテンプレートには `.github/workflows/deploy.yml` を同梱しています。
-
-- Pages の公開ソースを「GitHub Actions」に設定
-- `main` への push で `dist/` を deploy
-
-### base path の扱い
-
-- GitHub Pages の project site (`https://<user>.github.io/<repo>/`) は base path が必要です
-- このテンプレートは `astro.config.mjs` で `site` から `base` を自動推定します
-- GitHub Actions 上では `DIALINE_SITE_URL` 未設定でも `GITHUB_REPOSITORY` から既定の Pages URL を推定します
-- 独自ドメインや `username.github.io` リポジトリでは `base` は通常不要です
-
-設定方法:
-
-1. 既定の GitHub Pages URL を使う場合
-	- 追加設定なしで build/deploy 可能です
-2. 独自ドメインや別URLを使う場合
-	- `DIALINE_SITE_URL` に公開URLを設定します
-3. URL path と build base を明示的にずらしたい場合
-	- `DIALINE_BASE_PATH` を追加で設定します
-
-例:
+`@dialine/astro-site` は再現可能なビルドのため完全なバージョンで固定します。更新時は `package.json` のバージョンを変更し、lockfileも更新してください。
 
 ```sh
-DIALINE_SITE_URL=https://kojiro526.github.io/dialine-astro/
+pnpm update @dialine/astro-site --save-exact
+pnpm build
 ```
-
-frontmatter / entries 配列の `permalink`, `dayUrl`, `url` は base を含まない論理パスとして扱われ、テンプレート側で現在の `base` を付与します。
-
-## 初期公開時の推奨確認
-
-1. 独自ドメインや明示URLを使う場合は `DIALINE_SITE_URL` または `astro.config.mjs` の `site` を公開予定 URL に合わせる
-2. `dialine.config.json` の `branch` が公開ブランチと一致しているか確認
-3. `content/diary` と `content/entries` に Markdown がある状態で `pnpm run build` を実行

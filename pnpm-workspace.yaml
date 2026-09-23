@@ -1,4 +1,6 @@
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - '@dialine/astro-site'
 minimumReleaseAgeStrict: true
 blockExoticSubdeps: true
 engineStrict: true
